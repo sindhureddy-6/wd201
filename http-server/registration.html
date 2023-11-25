@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration form</title>
+    <link rel="stylesheet" href="registration.css" />
+  </head>
+  <body>
+    <div class="container">
+      <form id="user-form" autocomplete="off">
+        <div class="form">
+          <div class="heading">
+            <h2>Registration Form</h2>
+          </div>
+          <div class="name element">
+            <label for="name">Name</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Enter Name"
+              required
+            />
+          </div>
+          <div class="email element">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Enter email "
+              required
+            />
+          </div>
+          <div class="password element">
+            <label for="password">password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Enter password"
+              required
+            />
+          </div>
+          <div class="dob element">
+            <label for="dob">Date of Birth</label>
+            <input id="dob" type="date" name="dob" required />
+          </div>
+          <div class="tc-box element">
+            <input id="Tc" type="checkbox" name="Tc" />
+            <div class="tc">Accept Terms & Conditions</div>
+          </div>
+          <div class="btn element">
+            <!-- <form method="post"> -->
+            <button id="btn" type="submit">Submit</button>
+            <!-- </form> -->
+          </div>
+        </div>
+      </form>
+      <div class="user-data">
+        <h2>ENTRIES</h2>
+        <table id="entries">
+          <tr>
+            <th class="tableelement">Name</th>
+            <th class="tableelement">Email</th>
+            <th class="tableelement">Password</th>
+            <th class="tableelement">Dob</th>
+            <th class="tableelement">Accepted terms?</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <script src="registration.js"></script>
+  </body>
+</html>
