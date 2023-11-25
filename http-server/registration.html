@@ -4,7 +4,126 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registration form</title>
-    <link rel="stylesheet" href="registration.css" />
+    <!-- <link rel="stylesheet" href="./registration.css" /> -->
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100vw;
+        height: 100%;
+        background-color: #e4e7e4;
+      }
+
+      .form {
+        background-color: whitesmoke;
+        padding: 10px;
+        margin-top: 50px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 300px;
+        height: 380px;
+        border: 2px solid lightgray;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 520;
+      }
+
+      .element {
+        width: 100%;
+        height: 30px;
+
+        display: flex;
+        flex-direction: row;
+
+        justify-content: center;
+        flex-wrap: nowrap;
+      }
+
+      .heading {
+        display: flex;
+        justify-content: center;
+      }
+
+      label {
+        width: 30%;
+        padding: 5px 12px 0px 0px;
+      }
+
+      input {
+        width: 55%;
+        height: 100%;
+        border-color: none;
+        border-radius: 4px;
+        border: none;
+      }
+
+      .btn {
+        margin-top: 5px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .tc-box input {
+        width: 10%;
+        height: 60%;
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .tc {
+        width: 90%;
+        padding: 4px;
+        padding-left: 0px;
+      }
+
+      #btn {
+        width: 35%;
+        cursor: pointer;
+        background-color: lightgreen;
+        border: none;
+        border-radius: 0.5rem;
+      }
+
+      .user-data {
+        width: 60%;
+        display: flex;
+        border: 1px solid lightgrey;
+        border-radius: 0.5rem;
+        flex-direction: column;
+        margin-top: 40px;
+        padding: 10px;
+        align-items: centre;
+      }
+
+      .user-data h2 {
+        align-self: center;
+      }
+
+      .tableelement {
+        border: 1px solid black;
+        width: 25%;
+        height: 10px;
+        padding: 5px;
+      }
+
+      #email:invalid:focus {
+        border: 1px solid red;
+      }
+
+      #name:invalid:focus {
+        border: 1px solid red;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -72,6 +191,117 @@
       </div>
     </div>
 
-    <script src="registration.js"></script>
+    <script>
+      //localStorage.clear();
+      function calculateAge(birthdate) {
+        const today = new Date();
+        const birthDate = new Date(birthdate);
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (
+          monthDiff < 0 ||
+          (monthDiff === 0 && today.getDate() < birthDate.getDate())
+        ) {
+          return age - 1;
+        } else {
+          return age;
+        }
+      }
+      const validate = (email, dobInput, tc) => {
+        if (email.validity.typeMismatch) {
+          email.setCustomValidity("I am expecting an email address!");
+          email.reportValidity();
+        } else {
+          email.setCustomValidity("");
+        }
+
+        const dobValue = dobInput.value;
+
+        const age = calculateAge(dobValue);
+
+        if (age < 18 || age > 55) {
+          dobInput.setCustomValidity(
+            "You must be between 18 and 55 years old to register."
+          );
+          dobInput.reportValidity();
+        } else {
+          dobInput.setCustomValidity("");
+        }
+
+        const terms = tc.checked;
+        if (terms == false) {
+          tc.setCustomValidity("please click the checkbox to continue");
+          tc.reportValidity();
+        } else {
+          tc.setCustomValidity("");
+        }
+      };
+
+      const email = document.getElementById("email");
+      const dobInput = document.getElementById("dob");
+      const tc = document.getElementById("Tc");
+
+      email.addEventListener("input", () => validate(email));
+
+      dobInput.addEventListener("input", () => validate(email, dobInput));
+      tc.addEventListener("input", () => validate(email, dobInput, tc));
+
+      let userform = document.getElementById("user-form");
+      let retrievedata = () => {
+        let userdata = localStorage.getItem("User-entries");
+        if (userdata) {
+          userdata = JSON.parse(userdata);
+        } else {
+          userdata = [];
+        }
+        return userdata;
+      };
+      let displayEntries = () => {
+        const userdata = retrievedata();
+        // console.log(userdata);
+        let tableEntries = userdata
+          .map((entry) => {
+            let nameCell = `<td class="tableelement">${entry.name} </td>`;
+            let emailCell = `<td class="tableelement">${entry.email} </td>`;
+            let passwordCell = `<td class="tableelement">${entry.password} </td>`;
+            let dobCell = `<td class="tableelement">${entry.dob} </td>`;
+            let tcCell = `<td class="tableelement">${entry.tc} </td>`;
+
+            let row = `<tr>${nameCell} ${emailCell} ${passwordCell}  ${dobCell} ${tcCell} </tr>`;
+            return row;
+          })
+          .join("\n");
+
+        let table = document.getElementById("entries");
+        table.insertAdjacentHTML("beforeend", tableEntries);
+      };
+
+      let userdata = retrievedata();
+      const saveform = (event) => {
+        event.preventDefault();
+
+        let name = document.getElementById("name").value;
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        let dob = document.getElementById("dob").value;
+        let tc = document.getElementById("Tc").checked;
+
+        let entry = {
+          name: name,
+          email: email,
+          password: password,
+          dob: dob,
+          tc: tc,
+        };
+        userdata.push(entry);
+        localStorage.setItem("User-entries", JSON.stringify(userdata));
+        displayEntries();
+      };
+
+      userform.addEventListener("submit", saveform);
+
+      displayEntries();
+    </script>
   </body>
 </html>

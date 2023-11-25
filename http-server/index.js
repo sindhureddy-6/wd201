@@ -22,7 +22,7 @@ fs.readFile("registration.html", (err, registration) => {
   if (err) {
     throw err;
   }
-  projectContent =registration;
+  RegistrationContent =registration;
 });
 http
   .createServer((request, response) => {
