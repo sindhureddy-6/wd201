@@ -10,7 +10,7 @@ describe("todoList tests", () => {
     let todoLength;
 
 beforeEach(() => {
-  
+  add({ title: 'new todo', dueDate: new Date().toISOString(), completed: false });
   todoLength = all.length;
 });
     test("test that checks creating a new todo.", () => {
