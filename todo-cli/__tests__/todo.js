@@ -7,18 +7,19 @@ const { all,
     dueLater,
     toDisplayableList } = todoList();
 describe("todoList tests", () => {
-    let todoLength;
+    
 
-beforeEach(() => {
+beforeAll(() => {
   add({ title: 'new todo', dueDate: new Date().toISOString(), completed: false });
-  todoLength = all.length;
+
 });
     test("test that checks creating a new todo.", () => {
-        
+        let todoLength = all.length;
         add({ title: 'write home work', dueDate: new Date().toISOString(), completed: false });
         expect(all.length).toBe(todoLength + 1);
     });
     test("checks marking a todo as completed", () => {
+        expect(all[0].completed).toBe(false);
         markAsComplete(0);
         expect(all[0].completed).toBe(true);
     });
