@@ -10,12 +10,12 @@ describe("todoList tests", () => {
     
 
 beforeAll(() => {
-  add({ title: 'new todo', dueDate: new Date().toISOString(), completed: false });
+  add({ title: 'new todo', dueDate: new Date().toLocaleDateString("en-CA"), completed: false });
 
 });
     test("test that checks creating a new todo.", () => {
         let todoLength = all.length;
-        add({ title: 'write home work', dueDate: new Date().toISOString(), completed: false });
+        add({ title: 'write home work', dueDate: new Date().toLocaleDateString("en-CA"), completed: false });
         expect(all.length).toBe(todoLength + 1);
     });
     test("checks marking a todo as completed", () => {
