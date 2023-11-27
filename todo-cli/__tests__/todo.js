@@ -7,8 +7,14 @@ const { all,
     dueLater,
     toDisplayableList } = todoList();
 describe("todoList tests", () => {
+    let todoLength;
+
+beforeEach(() => {
+  
+  todoLength = all.length;
+});
     test("test that checks creating a new todo.", () => {
-        let todoLength = all.length;
+        
         add({ title: 'write home work', dueDate: new Date().toISOString(), completed: false });
         expect(all.length).toBe(todoLength + 1);
     });
