@@ -1,5 +1,5 @@
 const todoList = () => {
-  all = []
+  var all = [];
   const add = (todoItem) => {
     all.push(todoItem)
   }
