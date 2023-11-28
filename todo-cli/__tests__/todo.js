@@ -9,10 +9,10 @@ const { all,
 describe("todoList tests", () => {
     
 
-beforeAll(() => {
-  add({ title: 'new todo', dueDate: new Date().toLocaleDateString("en-CA"), completed: false });
+    beforeAll(() => {
+        add({ title: 'new todo', dueDate: new Date().toLocaleDateString("en-CA"), completed: false });
 
-});
+    });
     test("test that checks creating a new todo.", () => {
         let todoLength = all.length;
         add({ title: 'write home work', dueDate: new Date().toLocaleDateString("en-CA"), completed: false });
@@ -24,30 +24,23 @@ beforeAll(() => {
         expect(all[0].completed).toBe(true);
     });
     test("checks retrieval of overdue items", () => {
-        const overdues = overdue();
-        overdues.every((list) => {
-
-            expect(list.dueDate < new Date()).toBe(true);
-        });
+        const overDueTodoItemsCount = overdue().length
+        // add the over due task
+        add({ title: 'write home work', dueDate: new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleDateString("en-CA"), completed: false })
+        expect(overdue().length).toEqual(overDueTodoItemsCount + 1);
 
     });
     test("checks retrieval of due today items.", () => {
-        const Todaydues = dueToday();
-         const today = new Date();
-         today.setHours(0, 0, 0, 0);
-        Todaydues.every((list) => {
-            const dueDate = new Date(list.dueDate);
-      dueDate.setHours(0, 0, 0, 0);
-            expect(dueDate.toISOString() == today.toISOString()).toBe(true);
-        })
-        
+        const todayTodoItemsCount = dueToday().length
+        // add the Today due task
+        add({ title: 'write home work', dueDate: new Date().toLocaleDateString("en-CA"), completed: false })
+        expect(dueToday().length).toEqual(todayTodoItemsCount + 1);
 
     });
     test("checks retrieval of due later items.", () => {
-         const laterdues = dueLater();
-        laterdues.every((list) => {
-
-            expect(list.dueDate > new Date()).toBe(true);
-        });
+        const LaterdueTodoItemsCount = dueLater().length
+        // add the later due task
+        add({ title: 'write home work', dueDate: new Date(new Date().setDate(new Date().getDate() + 1)).toLocaleDateString("en-CA"), completed: false })
+        expect(dueLater().length).toEqual(LaterdueTodoItemsCount + 1);
     })
-})
+});
