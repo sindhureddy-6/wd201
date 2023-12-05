@@ -8,6 +8,9 @@
     "parserOptions": {
         "ecmaVersion": "latest"
     },
+    "globals": {
+    "__dirname": true
+  },
     "rules": {
     }
 }

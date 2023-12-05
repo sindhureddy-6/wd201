@@ -1,13 +1,16 @@
 const express = require("express");
-const cors = require('cors');
+
 const app = express();
 const { Todo } = require("./models");
+const path = require("path");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
-app.use(cors());
 
-app.get("/", function (request, response) {
-  response.send("Hello World");
+app.set("viewengine", "ejs");
+app.use(express.static(path.join(__dirname, "public")));
+app.get("/", async (request, response) => {
+  let allTodos = await Todo.getTodos();
+  response.render("index.ejs", { allTodos });
 });
 
 app.get("/todos", async function (_request, response) {
@@ -20,7 +23,7 @@ app.get("/todos", async function (_request, response) {
   try {
     const todos = await Todo.findAll();
     response.send(todos);
-  }catch (error) {
+  } catch (error) {
     console.log(error);
     return response.status(422).json(error);
   }
@@ -66,16 +69,16 @@ app.delete("/todos/:id", async function (request, response) {
   // response.send(true)
   try {
     const id = request.params.id;
-    const todo = await Todo.destroy({
+    await Todo.destroy({
       where: {
-        id:id }
+        id: id,
+      },
     });
     return response.json(true);
-} catch (error) {
+  } catch (error) {
     console.log(error);
     return response.status(422).json(error);
   }
-
 });
 
 module.exports = app;
