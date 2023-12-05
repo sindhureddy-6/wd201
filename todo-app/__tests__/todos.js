@@ -29,7 +29,7 @@ describe("Todo Application", function () {
     });
     expect(response.statusCode).toBe(200);
     expect(response.header["content-type"]).toBe(
-      "application/json; charset=utf-8"
+      "application/json; charset=utf-8",
     );
     const parsedResponse = JSON.parse(response.text);
     expect(parsedResponse.id).toBeDefined();
@@ -73,7 +73,7 @@ describe("Todo Application", function () {
 
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
     // FILL IN YOUR CODE HERE
-    const todo =await agent.post("/todos").send({
+    const todo = await agent.post("/todos").send({
       title: "Buy xbox",
       dueDate: new Date().toISOString(),
       completed: false,
@@ -81,7 +81,5 @@ describe("Todo Application", function () {
     const response = await agent.delete(`/todos/${todo.body.id}`);
     //const parsedResponse = JSON.parse(response.text);
     expect(response.status).toBe(200);
-
-
   });
 });
