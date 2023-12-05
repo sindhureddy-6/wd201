@@ -10,14 +10,14 @@
   },
   "globals": {
     "__dirname": true,
-    "__filename":true,
+    "__filename": true,
     "describe": "readonly",
     "beforeAll": "readonly",
     "afterAll": "readonly",
     "test": "readonly",
     "expect": "readonly",
-   " queryInterface":"readonly",
-   "Sequelize":"readonly"
+    " queryInterface": "readonly",
+    "Sequelize": "readonly"
   },
   "rules": {}
 }
