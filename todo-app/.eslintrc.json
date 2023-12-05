@@ -17,7 +17,8 @@
     "test": "readonly",
     "expect": "readonly",
     " queryInterface": "readonly",
-    "Sequelize": "readonly"
+    "Sequelize": "readonly",
+    "sequelize":"readonly"
   },
   "rules": {}
 }
