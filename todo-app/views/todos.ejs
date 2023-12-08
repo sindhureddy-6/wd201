@@ -5,11 +5,11 @@
   >
   <section title="Overdue">
     <h5 id="Overdue" class="text-3xl">
-      OverDue :
-      <span id="count-overdue" class="text-3xl inline">
-          <%=overDue.length%>
+      OverDue </h5>
+      <span id="count-overdue" class="text-xl inline">
+         count : <%=overDue.length%>
       </span>
-    </h5>
+    
     <ul class="overDueItems list-none flex flex-col justify-center">
       <% for(item of overDue){%>
       <li class="flex flex-row mb-1 gap-2 ml-20 mt-1 li">
@@ -40,9 +40,10 @@
   >
   <section title="Due Today">
     <h5  id="Due Later" class="text-3xl">
-      Due Today :
-      <span id="count-due-today" class="text-3xl inline"><%=DueToday.length%> </span>
-    </h5>
+      Due Today
+       </h5> 
+      <span id="count-due-today" class="text-xl inline"> count : <%=DueToday.length%> </span>
+    
     <ul class="dueTodayItems list-none flex flex-col justify-center">
       <%for(item of DueToday){%>
       <li class="flex flex-row mb-1 gap-2 ml-20 mt-1 li">
@@ -76,9 +77,10 @@
   >
   <section title="Due Later">
     <h5 id="Due Later" class="text-3xl">
-      Due Later :
-      <span id="count-due-later" class="text-3xl inline"><%=DueLater.length%></span>
-    </h5>
+      Due Later 
+       </h5>
+      <span id="count-due-later" class="text-xl block-inline"> Count : <%=DueLater.length%></span>
+  
     <ul class="dueLaterItems list-none flex flex-col justify-center">
       <%for(item of DueLater){%>
       <li class="flex flex-row mb-1 gap-2 ml-20 mt-1 li">
