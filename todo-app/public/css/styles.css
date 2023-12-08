@@ -1,8 +1,8 @@
 body {
-  background-color: rgb(63, 62, 62);
+  background-color: white;
   font-family: "Times New Roman", Times, serif;
-  color: white;
+  
 }
-td{
-  border: 2px solid white;
+.li:hover .icon{
+  display: block;
 }

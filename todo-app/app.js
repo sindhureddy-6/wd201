@@ -10,7 +10,20 @@ app.set("viewengine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/", async (request, response) => {
   let allTodos = await Todo.getTodos();
-  response.render("index.ejs", { allTodos });
+  console.log(`ALL TODOS LENGTH==>${allTodos.length}`);
+  //console.log(allTodos);
+  let overDue = allTodos.filter((item) => {
+    return item.dueDate < new Date().toISOString().slice(0, 10);
+  });
+  console.log(overDue);
+  let DueToday = allTodos.filter((item) => {
+    return item.dueDate == new Date().toISOString().slice(0, 10);
+  });
+  let DueLater = allTodos.filter((item) => {
+    return item.dueDate > new Date().toISOString().slice(0, 10);
+  });
+
+  response.render("index.ejs", { overDue, DueToday, DueLater });
 });
 
 app.get("/todos", async function (_request, response) {

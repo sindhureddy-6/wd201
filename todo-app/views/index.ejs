@@ -4,11 +4,43 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Index Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <%-include("header.ejs")%>
-    <%-include("todos.ejs",{allTodos})%>
-    <%-include("footer.ejs")%>
+    <!-- <%-include("header.ejs")%> -->
+    
+    <!-- <%-include("footer.ejs")%> -->
+    <div class="grid grid-cols-6 mt-2">
+      <div class="col-start-3 col-span-2">
+        <%-include("header.ejs")%>
+        <form>
+          <div class="flex gap-2 mt-4">
+            <div class="flex-auto py-2 leading-6 text-center">
+              <input
+                type="text"
+                placeholder="what's next..?"
+                class="border border-gray-300 rounded w-full p-1"
+              />
+            </div>
+            <div class="flex-auto py-2">
+              <input
+                type="date"
+                class="border border-gray-300 rounded w-full p-1"
+              />
+            </div>
+            <div class="flex-auto py-2 leading-5">
+              <button
+                type="submit"
+                class="bg-green-600 text-white px-5 py-2 rounded"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <%-include("todos.ejs",{overDue,DueToday,DueLater })%>
   </body>
 </html>
