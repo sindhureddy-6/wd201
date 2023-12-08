@@ -1,8 +1,7 @@
 body {
   background-color: white;
   font-family: "Times New Roman", Times, serif;
-  
 }
-.li:hover .icon{
+.li:hover .icon {
   display: block;
 }
