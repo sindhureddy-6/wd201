@@ -5,11 +5,9 @@
   >
     <h5 class="text-3xl">
       OverDue :
-      <span
-        ><h5 id="count-overdue" class="text-3xl inline">
+      <span id="count-overdue" class="text-3xl inline">
           <%=overDue.length%>
-        </h5></span
-      >
+      </span>
     </h5>
     <ul class="overDueItems list-none flex flex-col justify-center">
       <% for(item of overDue){%>
@@ -41,7 +39,7 @@
   >
     <h5 class="text-3xl">
       Due Today :
-      <span><h5 id="count-due-today" class="text-3xl inline"><%=DueToday.length%></h5></span>
+      <span id="count-due-today" class="text-3xl inline"><%=DueToday.length%> </span>
     </h5>
     <ul class="dueTodayItems list-none flex flex-col justify-center">
       <%for(item of DueToday){%>
@@ -76,7 +74,7 @@
   >
     <h5 class="text-3xl">
       Due Later :
-      <span><h5 id="count-due-later" class="text-3xl inline"><%=DueLater.length%></h5></span>
+      <span id="count-due-later" class="text-3xl inline"><%=DueLater.length%></span>
     </h5>
     <ul class="dueLaterItems list-none flex flex-col justify-center">
       <%for(item of DueLater){%>
