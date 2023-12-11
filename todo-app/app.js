@@ -1,10 +1,15 @@
 const express = require("express");
+const csrf = require("csurf");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 const { Todo } = require("./models");
 const path = require("path");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser("shhh! some secret string"));
+app.use(csrf({ cookie: true }));
 
 app.set("viewengine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
@@ -22,8 +27,25 @@ app.get("/", async (request, response) => {
   let DueLater = allTodos.filter((item) => {
     return item.dueDate > new Date().toISOString().slice(0, 10);
   });
-
-  response.render("index.ejs", { overDue, DueToday, DueLater });
+  let completedItems = allTodos.filter((item) => {
+    return item.completed == true;
+  });
+  if (request.accepts("html")) {
+    response.render("index.ejs", {
+      overDue,
+      DueToday,
+      DueLater,
+      completedItems,
+      csrfToken: request.csrfToken(),
+    });
+  } else {
+    response.json({
+      overDue,
+      DueToday,
+      DueLater,
+      completedItems,
+    });
+  }
 });
 
 app.get("/todos", async function (_request, response) {
@@ -54,18 +76,20 @@ app.get("/todos/:id", async function (request, response) {
 
 app.post("/todos", async function (request, response) {
   try {
-    const todo = await Todo.addTodo(request.body);
-    return response.json(todo);
+    await Todo.addTodo(request.body);
+    // window.location.href = "/";
+    return response.redirect("/");
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
   }
 });
 
-app.put("/todos/:id/markAsCompleted", async function (request, response) {
-  const todo = await Todo.findByPk(request.params.id);
+app.put("/todos/:id", async function (request, response) {
   try {
-    const updatedTodo = await todo.markAsCompleted();
+    const id = request.params.id;
+    const todo = await Todo.findByPk(id);
+    const updatedTodo = await todo.setCompletionStatus();
     return response.json(updatedTodo);
   } catch (error) {
     console.log(error);
@@ -82,12 +106,14 @@ app.delete("/todos/:id", async function (request, response) {
   // response.send(true)
   try {
     const id = request.params.id;
+    console.log(id);
     await Todo.destroy({
       where: {
-        id: id,
+        id,
       },
     });
-    return response.json(true);
+
+    return response.status(302).json(true);
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);

@@ -19,7 +19,10 @@
   "author": "sindhu",
   "license": "ISC",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "csurf": "^1.11.0",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
     "jest": "^29.7.0",
