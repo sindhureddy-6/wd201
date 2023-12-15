@@ -19,6 +19,7 @@
   "author": "sindhu",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0-rc.12",
     "connect-ensure-login": "^0.1.1",
     "cookie-parser": "^1.4.6",
