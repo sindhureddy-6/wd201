@@ -1,11 +1,17 @@
+/* eslint-disable no-unused-vars */
 const express = require("express");
 const csrf = require("csurf");
 const cookieParser = require("cookie-parser");
-
-const app = express();
-const { Todo } = require("./models");
+const session = require("express-session");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const connectEnsureLogin = require("connect-ensure-login");
 const path = require("path");
 const bodyParser = require("body-parser");
+
+const app = express();
+const { Todo, User } = require("./models");
+
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser("shhh! some secret string"));
@@ -13,7 +19,57 @@ app.use(csrf({ cookie: true }));
 
 app.set("viewengine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(
+  session({
+    secret: "my-super-secret-key-156655548662145",
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  }),
+);
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password",
+    },
+    (username, password, done) => {
+      User.findOne({
+        where: {
+          email: username,
+          password: password,
+        },
+      })
+        .then((user) => {
+          return done(null, user);
+        })
+        .catch((err) => {
+          return err;
+        });
+    },
+  ),
+);
+//to convert object to byte
+passport.serializeUser((user, done) => {
+  console.log("serializing user in session ", user.id);
+  done(null, user.id);
+});
+passport.deserializeUser(function (id, done) {
+  User.findByPk(id, function (err, user) {
+    done(err, user);
+  });
+});
 app.get("/", async (request, response) => {
+  response.render("index.ejs", {
+    csrfToken: request.csrfToken(),
+  });
+});
+app.get("/todos", async (request, response) => {
   let allTodos = await Todo.getTodos();
   //console.log(`ALL TODOS LENGTH==>${allTodos.length}`);
   //console.log(allTodos);
@@ -31,7 +87,7 @@ app.get("/", async (request, response) => {
     return item.completed == true;
   });
   if (request.accepts("html")) {
-    response.render("index.ejs", {
+    response.render("todo.ejs", {
       overDue,
       DueToday,
       DueLater,
@@ -48,7 +104,32 @@ app.get("/", async (request, response) => {
   }
 });
 
-app.get("/todos", async function (_request, response) {
+app.get("/signup", async (request, response) => {
+  response.render("signup.ejs", { csrfToken: request.csrfToken() });
+});
+app.post("/users", async (request, response) => {
+  console.log("user details", request.user);
+  try {
+    const user = await User.create({
+      firstName: request.body.firstName,
+      lastName: request.body.lastName,
+      email: request.body.email,
+      password: request.body.password,
+    });
+    request.login(user, (err) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log("redirecting to todos");
+      response.redirect("/todos");
+      console.log(" after redirecting to todos");
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/*app.get("/todos", async function (_request, response) {
   console.log("Processing list of all Todos ...");
   // FILL IN YOUR CODE HERE
 
@@ -62,7 +143,7 @@ app.get("/todos", async function (_request, response) {
     console.log(error);
     return response.status(422).json(error);
   }
-});
+});*/
 
 app.get("/todos/:id", async function (request, response) {
   try {
@@ -121,3 +202,4 @@ app.delete("/todos/:id", async function (request, response) {
 });
 
 module.exports = app;
+/* eslint-disable no-unused-vars */
