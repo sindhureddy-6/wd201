@@ -52,7 +52,7 @@ passport.use(
           if (result) {
             return done(null, user);
           } else {
-            return "invalid password";
+            return done("invalid password");
           }
         })
         .catch((err) => {
@@ -61,11 +61,12 @@ passport.use(
     },
   ),
 );
-//to convert object to byte
+//The serialize function will take user document i.e all realted information and outputs only the user_id which is sent into session
 passport.serializeUser((user, done) => {
   console.log("serializing user in session ", user.id);
   done(null, user.id);
 });
+//When any request is called the deserilaize function will be called and which will take ID from the sessions and give user document which consists of all related todos of user
 passport.deserializeUser((id, done) => {
   User.findByPk(id)
     .then((user) => {
@@ -86,18 +87,28 @@ app.get(
   "/todos",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    let allTodos = await Todo.getTodos();
+    const loggedinUser = request.user.id;
+    let allTodos = await Todo.getTodos(loggedinUser);
     //console.log(`ALL TODOS LENGTH==>${allTodos.length}`);
     //console.log(allTodos);
     let overDue = allTodos.filter((item) => {
-      return item.dueDate < new Date().toISOString().slice(0, 10);
+      return (
+        item.dueDate < new Date().toISOString().slice(0, 10) &&
+        item.completed == false
+      );
     });
     // console.log(overDue);
     let DueToday = allTodos.filter((item) => {
-      return item.dueDate == new Date().toISOString().slice(0, 10);
+      return (
+        item.dueDate == new Date().toISOString().slice(0, 10) &&
+        item.completed == false
+      );
     });
     let DueLater = allTodos.filter((item) => {
-      return item.dueDate > new Date().toISOString().slice(0, 10);
+      return (
+        item.dueDate > new Date().toISOString().slice(0, 10) &&
+        item.completed == false
+      );
     });
     let completedItems = allTodos.filter((item) => {
       return item.completed == true;
@@ -129,14 +140,23 @@ app.get("/login", async (request, response) => {
 });
 app.post(
   "/session",
-  passport.authenticate(
-    "local",
-    { failureRedirect: "/login" },
-    (request, response) => {
-      console.log(request.user);
-      response.redirect("/todos");
-    },
-  ),
+  passport.authenticate("local", { failureRedirect: "/login" }),
+  (request, response) => {
+    console.log(request.user);
+    response.redirect("/todos");
+  },
+);
+app.get(
+  "/signout",
+  connectEnsureLogin.ensureLoggedIn(),
+  (request, response, next) => {
+    request.logout((err) => {
+      if (err) {
+        return next(err);
+      }
+      response.redirect("/");
+    });
+  },
 );
 app.post("/users", async (request, response) => {
   const hashedpwd = await bcrypt.hash(request.body.password, saltRounds);
@@ -187,51 +207,68 @@ app.get("/todos/:id", async function (request, response) {
   }
 });
 
-app.post("/todos", async function (request, response) {
-  try {
-    await Todo.addTodo(request.body);
-    // window.location.href = "/";
-    return response.redirect("/todos");
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-});
+app.post(
+  "/todos",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    try {
+      await Todo.addTodo({
+        title: request.body.title,
+        dueDate: request.body.dueDate,
+        userId: request.user.id,
+      });
+      // window.location.href = "/";
+      return response.redirect("/todos");
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  },
+);
 
-app.put("/todos/:id", async function (request, response) {
-  try {
-    const id = request.params.id;
-    const todo = await Todo.findByPk(id);
-    const updatedTodo = await todo.setCompletionStatus();
-    return response.json(updatedTodo);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-});
+app.put(
+  "/todos/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    try {
+      const id = request.params.id;
+      const todo = await Todo.findByPk(id);
+      const updatedTodo = await todo.setCompletionStatus();
+      return response.json(updatedTodo);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  },
+);
 
-app.delete("/todos/:id", async function (request, response) {
-  console.log("We have to delete a Todo with ID: ", request.params.id);
-  // FILL IN YOUR CODE HERE
+app.delete(
+  "/todos/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async function (request, response) {
+    console.log("We have to delete a Todo with ID: ", request.params.id);
+    // FILL IN YOUR CODE HERE
 
-  // First, we have to query our database to delete a Todo by ID.
-  // Then, we have to respond back with true/false based on whether the Todo was deleted or not.
-  // response.send(true)
-  try {
-    const id = request.params.id;
-    console.log(id);
-    await Todo.destroy({
-      where: {
-        id,
-      },
-    });
+    // First, we have to query our database to delete a Todo by ID.
+    // Then, we have to respond back with true/false based on whether the Todo was deleted or not.
+    // response.send(true)
+    try {
+      const id = request.params.id;
+      console.log(id);
+      await Todo.destroy({
+        where: {
+          id,
+          userId: request.user.id,
+        },
+      });
 
-    return response.status(302).json(true);
-  } catch (error) {
-    console.log(error);
-    return response.status(422).json(error);
-  }
-});
+      return response.status(302).json(true);
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
+    }
+  },
+);
 
 module.exports = app;
 /* eslint-disable no-unused-vars */

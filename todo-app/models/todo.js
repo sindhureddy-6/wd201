@@ -14,11 +14,20 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
       });
     }
-    static addTodo({ title, dueDate }) {
-      return this.create({ title: title, dueDate: dueDate, completed: false });
+    static addTodo({ title, dueDate, userId }) {
+      return this.create({
+        title: title,
+        dueDate: dueDate,
+        completed: false,
+        userId,
+      });
     }
-    static getTodos() {
-      return this.findAll();
+    static getTodos(userId) {
+      return this.findAll({
+        where: {
+          userId,
+        },
+      });
     }
     setCompletionStatus() {
       if (this.completed) {
