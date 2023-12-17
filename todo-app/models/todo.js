@@ -31,24 +31,24 @@ module.exports = (sequelize, DataTypes) => {
     }
     setCompletionStatus(userId, id) {
       return this.update(
-        { complete: true },
+        { completed: true },
         {
           where: {
             userId,
             id,
-            complete: false,
+            completed: false,
           },
         },
       ).then((updatedTodo) => {
         if (updatedTodo[0] === 0) {
           // No rows were updated, meaning the todo was not found or was already completed
           return this.update(
-            { complete: false },
+            { completed: false },
             {
               where: {
                 userId,
                 id,
-                complete: true,
+                completed: true,
               },
             },
           );
@@ -75,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: "Due date must be a valid date.",
         },
       },
-      complete: {
+      completed: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },

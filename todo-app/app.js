@@ -103,24 +103,24 @@ app.get(
     let overDue = allTodos.filter((item) => {
       return (
         item.dueDate < new Date().toISOString().slice(0, 10) &&
-        item.complete == false
+        item.completed == false
       );
     });
     // console.log(overDue);
     let DueToday = allTodos.filter((item) => {
       return (
         item.dueDate === new Date().toISOString().slice(0, 10) &&
-        item.complete == false
+        item.completed == false
       );
     });
     let DueLater = allTodos.filter((item) => {
       return (
         item.dueDate > new Date().toISOString().slice(0, 10) &&
-        item.complete == false
+        item.completed == false
       );
     });
     let completedItems = allTodos.filter((item) => {
-      return item.complete == true;
+      return item.completed == true;
     });
     //console.log("due", DueToday);
     if (request.accepts("html")) {
@@ -286,8 +286,15 @@ app.delete(
           userId: request.user.id,
         },
       });
-
-      return response.status(302).json(true);
+      //return response.status(302).json(true);
+      request.login(request.user, (err) => {
+        if (err) {
+          console.log(err);
+        }
+        //console.log("redirecting to todos");
+        return response.redirect("/todos");
+        //console.log(" after redirecting to todos");
+      });
     } catch (error) {
       console.log(error);
       return response.status(422).json(error);

@@ -28,7 +28,7 @@
         }
     }).then((data) => {
         console.log("ok", data);
-         window.location.reload();
+        window.location.href = "/todos"
     }).catch((err) => {
         console.log(err);
         
@@ -46,7 +46,7 @@
           })
     }).then((res) => {
         if (res.ok) {
-           window.location.reload();
+          window.location.href = "/todos"
         } 
     }).catch((err) => {
         console.log(err);
