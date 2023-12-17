@@ -29,19 +29,49 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
-    setCompletionStatus() {
-      if (this.completed) {
-        return this.update({ completed: false });
-      } else {
-        return this.update({ completed: true });
-      }
+    setCompletionStatus(userId, id) {
+      return this.update(
+        { complete: true },
+        {
+          where: {
+            userId,
+            id,
+            complete: false,
+          },
+        },
+      ).then((updatedTodo) => {
+        if (updatedTodo[0] === 0) {
+          // No rows were updated, meaning the todo was not found or was already completed
+          return this.update(
+            { complete: false },
+            {
+              where: {
+                userId,
+                id,
+                complete: true,
+              },
+            },
+          );
+        }
+        return updatedTodo; // Return the result of the first update
+      });
     }
   }
   Todo.init(
     {
-      title: DataTypes.STRING,
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: true,
+          len: 5,
+        },
+      },
       dueDate: DataTypes.DATEONLY,
-      completed: DataTypes.BOOLEAN,
+      complete: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       sequelize,

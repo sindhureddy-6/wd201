@@ -9,6 +9,7 @@ const connectEnsureLogin = require("connect-ensure-login");
 const path = require("path");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
+const flash = require("connect-flash");
 
 const app = express();
 const { Todo, User } = require("./models");
@@ -19,6 +20,7 @@ app.use(cookieParser("shhh! some secret string"));
 app.use(csrf({ cookie: true }));
 
 app.set("viewengine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
@@ -31,6 +33,12 @@ app.use(
     },
   }),
 );
+app.use(flash());
+app.use(function (request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
+
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(
@@ -52,7 +60,7 @@ passport.use(
           if (result) {
             return done(null, user);
           } else {
-            return done("invalid password");
+            return done(null, false, { message: "Invalid password" });
           }
         })
         .catch((err) => {
@@ -88,31 +96,33 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     const loggedinUser = request.user.id;
+    //console.log("userid", loggedinUser);
     let allTodos = await Todo.getTodos(loggedinUser);
     //console.log(`ALL TODOS LENGTH==>${allTodos.length}`);
-    //console.log(allTodos);
+    //console.log("all todos",allTodos);
     let overDue = allTodos.filter((item) => {
       return (
         item.dueDate < new Date().toISOString().slice(0, 10) &&
-        item.completed == false
+        item.complete == false
       );
     });
     // console.log(overDue);
     let DueToday = allTodos.filter((item) => {
       return (
-        item.dueDate == new Date().toISOString().slice(0, 10) &&
-        item.completed == false
+        item.dueDate === new Date().toISOString().slice(0, 10) &&
+        item.complete == false
       );
     });
     let DueLater = allTodos.filter((item) => {
       return (
         item.dueDate > new Date().toISOString().slice(0, 10) &&
-        item.completed == false
+        item.complete == false
       );
     });
     let completedItems = allTodos.filter((item) => {
-      return item.completed == true;
+      return item.complete == true;
     });
+    //console.log("due", DueToday);
     if (request.accepts("html")) {
       response.render("todo.ejs", {
         overDue,
@@ -122,6 +132,7 @@ app.get(
         csrfToken: request.csrfToken(),
       });
     } else {
+      console.log("due", DueToday);
       response.json({
         overDue,
         DueToday,
@@ -140,9 +151,12 @@ app.get("/login", async (request, response) => {
 });
 app.post(
   "/session",
-  passport.authenticate("local", { failureRedirect: "/login" }),
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
   (request, response) => {
-    console.log(request.user);
+    request.flash("success", "Login successful!");
     response.redirect("/todos");
   },
 );
@@ -233,7 +247,8 @@ app.put(
     try {
       const id = request.params.id;
       const todo = await Todo.findByPk(id);
-      const updatedTodo = await todo.setCompletionStatus();
+      const userId = request.user.id;
+      const updatedTodo = await todo.setCompletionStatus(userId, id);
       return response.json(updatedTodo);
     } catch (error) {
       console.log(error);
