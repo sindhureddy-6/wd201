@@ -181,17 +181,27 @@ app.post("/users", async (request, response) => {
       email: request.body.email,
       password: hashedpwd,
     });
+    request.flash("success", "Todo created successfully.");
 
     request.login(user, (err) => {
       if (err) {
         console.log(err);
       }
-      console.log("redirecting to todos");
+      //console.log("redirecting to todos");
       response.redirect("/todos");
-      console.log(" after redirecting to todos");
+      //console.log(" after redirecting to todos");
     });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    if (error.name === "SequelizeValidationError") {
+      const errors = error.errors.map((err) => err.message);
+      request.flash("error", errors.join(" "));
+      response.redirect("/todos");
+    } else {
+      // Handle other errors
+      console.error(error);
+      request.flash("error", "An error occurred while creating the todo.");
+      response.redirect("/todos");
+    }
   }
 });
 

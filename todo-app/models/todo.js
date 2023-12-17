@@ -64,10 +64,17 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notNull: true,
-          len: 5,
+          notEmpty: {
+            msg: "Todo text cannot be empty.",
+          },
         },
       },
-      dueDate: DataTypes.DATEONLY,
+      dueDate: {
+        type: DataTypes.DATEONLY,
+        isDate: {
+          msg: "Due date must be a valid date.",
+        },
+      },
       complete: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
