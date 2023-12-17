@@ -181,7 +181,7 @@ app.post("/users", async (request, response) => {
       email: request.body.email,
       password: hashedpwd,
     });
-    request.flash("success", "Todo created successfully.");
+    request.flash("success", "user created successfully.");
 
     request.login(user, (err) => {
       if (err) {
@@ -242,10 +242,19 @@ app.post(
         userId: request.user.id,
       });
       // window.location.href = "/";
+      request.flash("success", "Todo created successfully.");
       return response.redirect("/todos");
     } catch (error) {
-      console.log(error);
-      return response.status(422).json(error);
+      if (error.name === "SequelizeValidationError") {
+        const errors = error.errors.message;
+        request.flash("message", errors);
+        return response.status(422).json(error);
+      } else {
+        // Handle other errors
+        //console.error(error);
+        request.flash("error", "An error occurred while creating the todo.");
+        return response.status(422).json(error);
+      }
     }
   },
 );

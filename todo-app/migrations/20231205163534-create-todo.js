@@ -8,6 +8,12 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
+        validate: {
+          // notNull: true,
+          notEmpty: {
+            msg: "Todo text cannot be empty.",
+          },
+        },
       },
       title: {
         type: Sequelize.STRING,

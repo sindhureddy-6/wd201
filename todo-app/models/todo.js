@@ -63,16 +63,17 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          // notNull: true,
           notEmpty: {
-            msg: "Todo text cannot be empty.",
+            msg: "Todo should not be empty",
           },
         },
       },
       dueDate: {
         type: DataTypes.DATEONLY,
-        isDate: {
-          msg: "Due date must be a valid date.",
+        validate: {
+          isDate: {
+            msg: "Due date must be a valid date.",
+          },
         },
       },
       completed: {
