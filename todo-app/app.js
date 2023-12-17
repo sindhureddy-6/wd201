@@ -287,7 +287,7 @@ app.delete(
         },
       });
       //return response.status(302).json(true);
-      return response.status(302).json({ success: true });
+      return response.json({ success: true });
     } catch (error) {
       console.log(error);
       return response.status(422).json(error);

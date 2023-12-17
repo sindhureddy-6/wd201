@@ -179,8 +179,9 @@ describe("Todo Application", function () {
     const deletedResponse = await agent
       .delete(`/todos/${latestTodo.id}`)
       .send({ _csrf: csrfToken });
+    console.log(deletedResponse);
 
-    expect(deletedResponse.statusCode).toBe(302);
+    expect(deletedResponse.statusCode).toBe(200);
   });
 });
 /* eslint-disable no-unused-vars */
