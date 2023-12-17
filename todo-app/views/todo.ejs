@@ -28,7 +28,7 @@
         }
     }).then((data) => {
         console.log("ok", data);
-        window.location.href = "/todos"
+        window.location.reload();
     }).catch((err) => {
         console.log(err);
         
@@ -46,7 +46,7 @@
           })
     }).then((res) => {
         if (res.ok) {
-          window.location.href = "/todos"
+          window.location.reload()
         } 
     }).catch((err) => {
         console.log(err);
@@ -67,6 +67,7 @@
       <div class="col-start-3 col-span-2">
         <%-include("header.ejs")%>
         <a href="/signout" class="py-2"> Signout</a>
+         <%-include("notifications.ejs")%>
         <form action="/todos" method="post">
           <input type="hidden" name="_csrf" value="<%=csrfToken%>">
           <div class="flex gap-2 mt-4">
@@ -76,7 +77,7 @@
                 name="title"
                 placeholder="what's next..?"
                 class="border border-gray-300 rounded w-full p-1"
-                 required
+                required
               />
             </div>
             <div class="flex-auto py-2">

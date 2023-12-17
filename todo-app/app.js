@@ -193,12 +193,12 @@ app.post("/users", async (request, response) => {
     });
   } catch (error) {
     if (error.name === "SequelizeValidationError") {
-      const errors = error.errors.map((err) => err.message);
-      request.flash("error", errors.join(" "));
+      const errors = error.errors.message;
+      request.flash("message", errors);
       response.redirect("/todos");
     } else {
       // Handle other errors
-      console.error(error);
+      //console.error(error);
       request.flash("error", "An error occurred while creating the todo.");
       response.redirect("/todos");
     }
@@ -287,14 +287,7 @@ app.delete(
         },
       });
       //return response.status(302).json(true);
-      request.login(request.user, (err) => {
-        if (err) {
-          console.log(err);
-        }
-        //console.log("redirecting to todos");
-        return response.redirect("/todos");
-        //console.log(" after redirecting to todos");
-      });
+      return response.status(302).json({ success: true });
     } catch (error) {
       console.log(error);
       return response.status(422).json(error);

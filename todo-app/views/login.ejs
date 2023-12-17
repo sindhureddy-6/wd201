@@ -13,6 +13,7 @@
       <div class="col-start-3 col-span-2">
         <%-include("header.ejs")%>
         <p class="py-2 text-2xl">Login user</p>
+        <%-include("notifications.ejs")%>
         <form action="/session" method="post">
             <input type="hidden" name="_csrf" value="<%=csrfToken%>">
             <div class="py-2"> 
@@ -28,11 +29,7 @@
             </div>
 
         </form>
-       <% if(messages && messages.error && messages.error.length > 0)  { %>
-          <% for(var i=0; i<messages.error.length; i++) { %>
-            <li> <%= messages.error[i] %></li>
-              <% } %>
-        <% } %>
+    
       </div>
     </div>
   </body>

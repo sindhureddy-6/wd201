@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notNull: true,
+          // notNull: true,
           notEmpty: {
             msg: "Todo text cannot be empty.",
           },
