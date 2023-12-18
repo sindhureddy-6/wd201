@@ -199,9 +199,8 @@ app.post("/users", async (request, response) => {
       if (err) {
         console.log(err);
       }
-      //console.log("redirecting to todos");
+
       response.redirect("/todos");
-      //console.log(" after redirecting to todos");
     });
   } catch (error) {
     if (error.name === "SequelizeValidationError") {
@@ -209,8 +208,6 @@ app.post("/users", async (request, response) => {
       request.flash("error", errors);
       response.redirect("/todos");
     } else {
-      // Handle other errors
-      //console.error(error);
       request.flash("error", "An error occurred.");
       response.redirect("/todos");
     }
@@ -304,11 +301,7 @@ app.delete(
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     console.log("We have to delete a Todo with ID: ", request.params.id);
-    // FILL IN YOUR CODE HERE
 
-    // First, we have to query our database to delete a Todo by ID.
-    // Then, we have to respond back with true/false based on whether the Todo was deleted or not.
-    // response.send(true)
     try {
       const id = request.params.id;
       console.log(id);
