@@ -6,7 +6,7 @@
   "scripts": {
     "pretest": "cross-env NODE_ENV=test npx sequelize-cli db:drop && cross-env NODE_ENV=test npx sequelize-cli db:create",
     "start:prod": "node index.js",
-    "start": "nodemon -e js,ejs",
+    "start": "nodemon index.js",
     "test": "jest --detectOpenHandles",
     "prepare": "cd .. && husky install todo-app/.husky"
   },
