@@ -132,7 +132,7 @@ app.get(
         csrfToken: request.csrfToken(),
       });
     } else {
-      console.log("due", DueToday);
+      //console.log("due", DueToday);
       response.json({
         overDue,
         DueToday,
@@ -175,6 +175,14 @@ app.get(
 app.post("/users", async (request, response) => {
   const hashedpwd = await bcrypt.hash(request.body.password, saltRounds);
   try {
+    if (request.body.firstName == "") {
+      request.flash("error", "please provide first name");
+      return response.redirect("/signup");
+    }
+    if (request.body.email == "") {
+      request.flash("error", "please provide email");
+      return response.redirect("/signup");
+    }
     const user = await User.create({
       firstName: request.body.firstName,
       lastName: request.body.lastName,
@@ -194,12 +202,12 @@ app.post("/users", async (request, response) => {
   } catch (error) {
     if (error.name === "SequelizeValidationError") {
       const errors = error.errors.message;
-      request.flash("message", errors);
+      request.flash("error", errors);
       response.redirect("/todos");
     } else {
       // Handle other errors
       //console.error(error);
-      request.flash("error", "An error occurred while creating the todo.");
+      request.flash("error", "An error occurred.");
       response.redirect("/todos");
     }
   }
@@ -236,6 +244,17 @@ app.post(
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     try {
+      if (request.body.title.length < 5) {
+        request.flash(
+          "error",
+          "Please make sure title should be more than 5 letters",
+        );
+        return response.redirect("/todos");
+      }
+      if (request.body.dueDate == "") {
+        request.flash("error", "Please Enter date");
+        return response.redirect("/todos");
+      }
       await Todo.addTodo({
         title: request.body.title,
         dueDate: request.body.dueDate,
