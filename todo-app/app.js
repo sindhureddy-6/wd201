@@ -183,6 +183,10 @@ app.post("/users", async (request, response) => {
       request.flash("error", "please provide email");
       return response.redirect("/signup");
     }
+    if (request.body.password == "") {
+      request.flash("error", "please provide email");
+      return response.redirect("/signup");
+    }
     const user = await User.create({
       firstName: request.body.firstName,
       lastName: request.body.lastName,
