@@ -4,11 +4,11 @@
     class="col-start-1 col-span-2 OverDue mt-4 flex flex-col text-center ml-10"
   >
   <section title="Overdue">
-    <h5 id="Overdue" class="text-3xl">
-      Overdue </h5>
-      <span id="count-overdue" class="text-xl inline">
-         count : <%=overDue.length%>
-      </span>
+    <h5 class="text-3xl">
+      Overdue  <span id="Overdue" class="text-2xl inline ml-2  border border-black-400">
+         <%=overDue.length%>
+      </span></h5>
+      
     
     <ul class="overDueItems list-none flex flex-col justify-center">
       <% for(item of overDue){%>
@@ -38,10 +38,10 @@
     class="col-start-3 col-span-2 DueToday mt-4 flex flex-col  text-center ml-10"
   >
   <section title="Due Today">
-    <h5  id="Due Later" class="text-3xl">
-      Due Today
-       </h5> 
-      <span id="count-due-today" class="text-xl inline"> count : <%=DueToday.length%> </span>
+    <h5  class="text-3xl">
+      Due Today <span id="Due Today" class="text-2xl inline ml-2  border border-black-400"><%=DueToday.length%> </span>
+      </h5> 
+     
     
     <ul class="dueTodayItems list-none flex flex-col justify-center">
       <%for(item of DueToday){%>
@@ -75,9 +75,9 @@
   >
   <section title="Due Later">
     <h5 id="Due Later" class="text-3xl">
-      Due Later 
+      Due Later <span id="Due Later" class="text-2xl block-inline ml-2 border border-black-400"><%=DueLater.length%></span>
        </h5>
-      <span id="count-due-later" class="text-xl block-inline"> Count : <%=DueLater.length%></span>
+     
   
     <ul class="dueLaterItems list-none flex flex-col justify-center">
       <%for(item of DueLater){%>
@@ -111,9 +111,9 @@
   >
   <section title="Completed Items">
     <h5 id="Completed Items" class="text-3xl">
-     Completed Items
+     Completed Items  <span id="Completed" class="text-xl block-inline ml-2 border border-black-400"><%=completedItems.length%></span>
        </h5>
-      <span id="count-completed" class="text-xl block-inline"> Count : <%=completedItems.length%></span>
+      
   
     <ul class="completedItems list-none flex flex-col justify-center">
       <%for(item of completedItems){%>

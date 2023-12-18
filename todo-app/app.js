@@ -172,46 +172,45 @@ app.get(
     });
   },
 );
-app.post("/users", async (request, response) => {
-  const hashedpwd = await bcrypt.hash(request.body.password, saltRounds);
+app.post("/users", async (req, res) => {
+  if (req.body.firstName.length === 0) {
+    req.flash("error", "First Name can't be empty");
+    return res.redirect("/signup");
+  }
+
+  if (req.body.email.length === 0) {
+    req.flash("error", "Email can't be empty");
+    return res.redirect("/signup");
+  }
+
+  if (req.body.password.length === 0) {
+    req.flash("error", "Password can't be empty");
+    return res.redirect("/signup");
+  }
+  //hash password using bcrypt
+
+  const hasedPwd = await bcrypt.hash(req.body.password, saltRounds);
+
   try {
-    if (request.body.firstName == "") {
-      request.flash("error", "please provide first name");
-      return response.redirect("/signup");
-    }
-    if (request.body.email == "") {
-      request.flash("error", "please provide email");
-      return response.redirect("/signup");
-    }
-    if (request.body.password == "") {
-      request.flash("error", "please provide email");
-      return response.redirect("/signup");
-    }
     const user = await User.create({
-      firstName: request.body.firstName,
-      lastName: request.body.lastName,
-      email: request.body.email,
-      password: hashedpwd,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: hasedPwd,
     });
-    request.flash("success", "user created successfully.");
 
-    request.login(user, (err) => {
+    req.login(user, (err) => {
       if (err) {
-        console.log(err);
+        return res.status(422).send({ error: err.message });
       }
-
-      response.redirect("/todos");
+      res.redirect("/todos");
     });
   } catch (error) {
-    if (error.name === "SequelizeValidationError") {
-      const errors = error.errors.message;
-      request.flash("error", errors);
-      response.redirect("/todos");
-    } else {
-      request.flash("error", "An error occurred.");
-      response.redirect("/todos");
-    }
+    req.flash("error", "Email Already Exists");
+    return res.redirect("/signup");
   }
+
+  //add user
 });
 
 /*app.get("/todos", async function (_request, response) {
