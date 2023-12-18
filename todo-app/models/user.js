@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       firstName: {
         type: DataTypes.STRING,
+        allowNull: false,
         validate: {
           notEmpty: {
             msg: "Please provide your first name.",
@@ -27,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       lastName: DataTypes.STRING,
       email: {
         type: DataTypes.STRING,
+        allowNull: false,
         validate: {
           notEmpty: {
             msg: "Please provide your Email",

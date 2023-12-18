@@ -70,6 +70,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       dueDate: {
         type: DataTypes.DATEONLY,
+        allowNull: false,
         validate: {
           isDate: {
             msg: "Due date must be a valid date.",
