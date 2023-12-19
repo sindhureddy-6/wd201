@@ -73,19 +73,9 @@ describe("Todo Application", function () {
 
   test("Marks a todo with the given ID as complete", async () => {
     const agent = request.agent(server);
-    let res = await agent.get("/signup");
-    let csrfToken = extractCsrfToken(res);
-    res = await agent.post("/users").send({
-      firstName: "test",
-      lastName: "test",
-      email: "test@gmail.com",
-      password: "password",
-      _csrf: csrfToken,
-    });
-    //const agent =request.agent(server);
     await login(agent, "test@gmail.com", "password");
-    res = await agent.get("/todos");
-    csrfToken = extractCsrfToken(res);
+    let res = await agent.get("/todos");
+    let csrfToken = extractCsrfToken(res);
     const postResponse = await agent.post("/todos").send({
       title: "Buy milk",
       dueDate: new Date().toISOString(),
@@ -148,18 +138,9 @@ describe("Todo Application", function () {
   test("Deletes a todo with the given ID if it exists and sends a boolean response", async () => {
     // FILL IN YOUR CODE HERE
     const agent = request.agent(server);
-    let res = await agent.get("/signup");
-    let csrfToken = extractCsrfToken(res);
-    res = await agent.post("/users").send({
-      firstName: "test",
-      lastName: "test",
-      email: "test@gmail.com",
-      password: "password",
-      _csrf: csrfToken,
-    });
     await login(agent, "test@gmail.com", "password");
-    res = await agent.get("/todos");
-    csrfToken = extractCsrfToken(res);
+    let res = await agent.get("/todos");
+    let csrfToken = extractCsrfToken(res);
     const todo = await agent.post("/todos").send({
       title: "Buy xbox",
       dueDate: new Date().toISOString(),
