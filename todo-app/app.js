@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const express = require("express");
-const csrf = require("csurf");
+const csrf = require("tiny-csrf");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
@@ -8,7 +8,7 @@ const LocalStrategy = require("passport-local");
 const connectEnsureLogin = require("connect-ensure-login");
 const path = require("path");
 const bodyParser = require("body-parser");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const flash = require("connect-flash");
 
 const app = express();
@@ -16,8 +16,10 @@ const { Todo, User } = require("./models");
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser("shhh! some secret string"));
-app.use(csrf({ cookie: true }));
+app.use(cookieParser("shh! some secret string"));
+app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
+//app.use(csrf({ cookie:true}));
+
 
 app.set("viewengine", "ejs");
 app.set("views", path.join(__dirname, "views"));
