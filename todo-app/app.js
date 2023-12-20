@@ -89,6 +89,9 @@ passport.deserializeUser((id, done) => {
 });
 const saltRounds = 10;
 app.get("/", async (request, response) => {
+  if (request.isAuthenticated()) {
+    return response.redirect("/todos");
+  }
   response.render("index.ejs", {
     csrfToken: request.csrfToken(),
   });
@@ -98,33 +101,10 @@ app.get(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     const loggedinUser = request.user.id;
-    //console.log("userid", loggedinUser);
-    let allTodos = await Todo.getTodos(loggedinUser);
-    //console.log(`ALL TODOS LENGTH==>${allTodos.length}`);
-    //console.log("all todos",allTodos);
-    let overDue = allTodos.filter((item) => {
-      return (
-        item.dueDate < new Date().toISOString().slice(0, 10) &&
-        item.completed == false
-      );
-    });
-    // console.log(overDue);
-    let DueToday = allTodos.filter((item) => {
-      return (
-        item.dueDate === new Date().toISOString().slice(0, 10) &&
-        item.completed == false
-      );
-    });
-    let DueLater = allTodos.filter((item) => {
-      return (
-        item.dueDate > new Date().toISOString().slice(0, 10) &&
-        item.completed == false
-      );
-    });
-    let completedItems = allTodos.filter((item) => {
-      return item.completed == true;
-    });
-    //console.log("due", DueToday);
+    const overDue = await Todo.Overdue(loggedinUser);
+    const DueToday = await Todo.dueToday(loggedinUser);
+    const DueLater = await Todo.dueLater(loggedinUser);
+    const completedItems = await Todo.completedItems(loggedinUser);
     if (request.accepts("html")) {
       response.render("todo.ejs", {
         overDue,
@@ -287,8 +267,8 @@ app.put(
     try {
       const id = request.params.id;
       const todo = await Todo.findByPk(id);
-      const userId = request.user.id;
-      const updatedTodo = await todo.setCompletionStatus(userId, id);
+      
+    const updatedTodo = await todo.setCompletionStatus(todo.completed);
       return response.json(updatedTodo);
     } catch (error) {
       console.log(error);
@@ -302,16 +282,12 @@ app.delete(
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
     console.log("We have to delete a Todo with ID: ", request.params.id);
+    const userId = request.user.id;
 
     try {
       const id = request.params.id;
-      console.log(id);
-      await Todo.destroy({
-        where: {
-          id,
-          userId: request.user.id,
-        },
-      });
+      
+      await Todo.remove(id, userId);
       //return response.status(302).json(true);
       return response.json({ success: true });
     } catch (error) {

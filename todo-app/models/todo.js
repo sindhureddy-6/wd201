@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model,Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
@@ -29,33 +29,62 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
-    setCompletionStatus(userId, id) {
-      return this.update(
-        { completed: true },
-        {
-          where: {
-            userId,
-            id,
-            completed: false,
-          },
+    static completedItems(userId) {
+      return this.findAll({
+        where: {
+          completed: true,
+          userId: userId,
         },
-      ).then((updatedTodo) => {
-        if (updatedTodo[0] === 0) {
-          // No rows were updated, meaning the todo was not found or was already completed
-          return this.update(
-            { completed: false },
-            {
-              where: {
-                userId,
-                id,
-                completed: true,
-              },
-            },
-          );
-        }
-        return updatedTodo; // Return the result of the first update
+        order: [["id", "ASC"]],
       });
     }
+    static Overdue(userId) {
+      return this.findAll({
+        where: {
+          dueDate: {
+            [Op.lt]: new Date().toLocaleDateString("en-CA"),
+          },
+          userId: userId,
+          completed: false,
+        }
+       
+      });
+    }
+    static dueToday(userId) {
+      return this.findAll({
+        where: {
+          dueDate: {
+            [Op.eq]: new Date().toLocaleDateString("en-CA"),
+          },
+          userId: userId,
+          completed: false,
+        }
+      });
+    }
+    static dueLater(userId) {
+      return this.findAll({
+        where: {
+          dueDate: {
+            [Op.gt]: new Date().toLocaleDateString("en-CA"),
+          },
+          userId: userId,
+          completed: false,
+        }
+      });
+    }
+    static async remove(id, userId) {
+      return this.destroy({
+        where: {
+          id,
+          userId,
+        },
+      });
+    }
+    setCompletionStatus(bool) {
+      console.log("boolean value", bool);
+      return this.update({ completed:  !bool });
+    }
+      
   }
   Todo.init(
     {
