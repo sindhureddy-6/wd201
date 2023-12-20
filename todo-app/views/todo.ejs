@@ -10,9 +10,9 @@
       </span></h5>
       
     
-    <ul class="overDueItems list-none flex flex-col justify-center">
+    <ul class="list-none flex flex-col justify-center">
       <% for(item of overDue){%>
-      <li class="Todo-Item flex flex-row mb-1 gap-2 ml-20 mt-1 li">
+      <li class="flex flex-row mb-1 gap-2 ml-20 mt-1 li">
         <input type="checkbox" name="completed" id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
         <label for="list-item-<%=item.id%>" class="text-2xl text-gray-600 cursor-pointer">
           <%=item.title %>
@@ -43,9 +43,9 @@
       </h5> 
      
     
-    <ul class="dueTodayItems list-none flex flex-col justify-center">
+    <ul class="list-none flex flex-col justify-center">
       <%for(item of DueToday){%>
-      <li class=" Todo-Item flex flex-row mb-1 gap-2 ml-20 mt-1 li">
+      <li class="flex flex-row mb-1 gap-2 ml-20 mt-1 li">
 
         <input type="checkbox" name="completed" id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
         <label for="list-item-<%=item.id%>" class="text-2xl text-gray-600 cursor-pointer">
@@ -79,9 +79,9 @@
        </h5>
      
   
-    <ul class="dueLaterItems list-none flex flex-col justify-center">
+    <ul class="list-none flex flex-col justify-center">
       <%for(item of DueLater){%>
-      <li class=" Todo-Item flex flex-row mb-1 gap-2 ml-20 mt-1 li">
+      <li class="flex flex-row mb-1 gap-2 ml-20 mt-1 li">
         <input type="checkbox" name="completed" id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
         <label for="list-item-<%=item.id%>" class="text-2xl text-gray-600 cursor-pointer">
           <%=item.title%>
@@ -117,7 +117,7 @@
   
     <ul class="completedItems list-none flex flex-col justify-center">
       <%for(item of completedItems){%>
-      <li class=" Todo-Item flex flex-row mb-1 gap-2 ml-20 mt-1 li">
+      <li class=" flex flex-row mb-1 gap-2 ml-20 mt-1 li">
         <input type="checkbox" name="completed " id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
         <label for="list-item-<%=item.id%>" class="text-2xl text-gray-600 cursor-pointer">
           <%=item.title%>
