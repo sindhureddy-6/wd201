@@ -12,7 +12,7 @@
     
     <ul class="list-none flex flex-col justify-center">
       <% for(item of overDue){%>
-      <li class="flex flex-row mb-1 gap-2 ml-20 mt-1 li">
+      <li class="Todo-Item flex flex-row mb-1 gap-2 ml-20 mt-1 li">
         <input type="checkbox" name="completed" id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
         <label for="list-item-<%=item.id%>" class="text-2xl text-gray-600 cursor-pointer">
           <%=item.title %>
@@ -45,7 +45,7 @@
     
     <ul class="list-none flex flex-col justify-center">
       <%for(item of DueToday){%>
-      <li class="flex flex-row mb-1 gap-2 ml-20 mt-1 li">
+      <li class="Todo-Item flex flex-row mb-1 gap-2 ml-20 mt-1 li">
 
         <input type="checkbox" name="completed" id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
         <label for="list-item-<%=item.id%>" class="text-2xl text-gray-600 cursor-pointer">
@@ -81,7 +81,7 @@
   
     <ul class="list-none flex flex-col justify-center">
       <%for(item of DueLater){%>
-      <li class="flex flex-row mb-1 gap-2 ml-20 mt-1 li">
+      <li class="Todo-Item flex flex-row mb-1 gap-2 ml-20 mt-1 li">
         <input type="checkbox" name="completed" id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
         <label for="list-item-<%=item.id%>" class="text-2xl text-gray-600 cursor-pointer">
           <%=item.title%>
@@ -117,7 +117,7 @@
   
     <ul class="list-none flex flex-col justify-center">
       <%for(item of completedItems){%>
-      <li class=" flex flex-row mb-1 gap-2 ml-20 mt-1 li">
+      <li class="Todo-Item flex flex-row mb-1 gap-2 ml-20 mt-1 li">
         <input type="checkbox" name="completed " id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
         <label for="list-item-<%=item.id%>" class="text-2xl text-gray-600 cursor-pointer">
           <%=item.title%>
