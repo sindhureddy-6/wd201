@@ -106,7 +106,7 @@ app.get(
     const DueLater = await Todo.dueLater(loggedinUser);
     const completedItems = await Todo.completedItems(loggedinUser);
     if (request.accepts("html")) {
-      response.render("todo.ejs", {
+      response.render("todos.ejs", {
         overDue,
         DueToday,
         DueLater,
@@ -211,7 +211,7 @@ app.post("/users", async (req, res) => {
   }
 });*/
 
-app.get("/todos/:id", async function (request, response) {
+app.get("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async function (request, response) {
   try {
     const todo = await Todo.findByPk(request.params.id);
     return response.json(todo);

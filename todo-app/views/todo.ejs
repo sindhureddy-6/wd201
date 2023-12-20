@@ -1,106 +1,147 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="csrf-Token" content="<%=csrfToken%>"">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index Page</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="./css/styles.css" />
-    <script>
-      const token=document.querySelector('meta[name="csrf-Token"]').getAttribute("content");
-      function updateTodo(id){
-        console.log("clicked in func");
-        fetch(`/todos/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body:JSON.stringify({
-            "_csrf":token
-          })
-        
-    }).then((res) => {
-        if (res.ok) {
-           return res.json();
-        } else {
-            throw new Error('Failed to mark todo as completed.');
-        }
-    }).then((data) => {
-        console.log("ok", data);
-        window.location.reload();
-    }).catch((err) => {
-        console.log(err);
-        
-    });
-      }
-      function deleteTodo(id){
-        console.log("clicked in  delete func");
-        fetch(`/todos/${id}`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body:JSON.stringify({
-            "_csrf":token
-          })
-    }).then((res) => {
-        if (res.ok) {
-          window.location.reload()
-        } 
-    }).catch((err) => {
-        console.log(err);
-        
-    });
-      }
-   
-
-
-
-    </script>
-  </head>
-  <body>
-    <!-- <%-include("header.ejs")%> -->
+<div class="grid grid-cols-6 mt-5">
+ 
+  <div
+    class="col-start-1 col-span-2 OverDue mt-4 flex flex-col text-center ml-10"
+  >
+  <section title=" Overdue Overdue">
+    <h5 class="text-3xl">
+      Overdue  <span id="Overdue" class="text-2xl inline ml-2  border border-black-400">
+         <%=overDue.length%>
+      </span></h5>
+      
     
-    <!-- <%-include("footer.ejs")%> -->
-    <div class="grid grid-cols-6 mt-2">
-      <div class="col-start-3 col-span-2">
-        <%-include("header.ejs")%>
-        <a href="/signout" class="py-2"> Signout</a>
-         <%-include("notifications.ejs")%>
-        <form action="/todos" method="post">
-          <input type="hidden" name="_csrf" value="<%=csrfToken%>">
-          <div class="flex gap-2 mt-4">
-            <div class="flex-auto py-2 leading-6 text-center">
-              <input
-                type="text"
-                name="title"
-                placeholder="what's next..?"
-                class="border border-gray-300 rounded w-full p-1"
-              
-              />
-            </div>
-            <div class="flex-auto py-2">
-              <input
-                type="date"
-                name="dueDate"
-                class="border border-gray-300 rounded w-full p-1"
-             
-              />
-            </div>
-            <div class="flex-auto py-2 leading-5">
-              <button
-                type="submit"
-                class="bg-green-600 text-white px-5 py-2 rounded"
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-       <%-include("todos.ejs", {overDue, DueToday, DueLater,completedItems})%>
+    <ul class="overDueItems list-none flex flex-col justify-center">
+      <% for(item of overDue){%>
+      <li class="Todo-Item flex flex-row mb-1 gap-2 ml-20 mt-1 li">
+        <input type="checkbox" name="completed" id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
+        <label for="list-item-<%=item.id%>" class="text-2xl text-gray-600 cursor-pointer">
+          <%=item.title %>
+        </label>
+        <a href="/" class="icon hidden" onclick="deleteTodo('<%=item.id%>')">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="w-5 h-5 mt-2">
+            <path
+              fill-rule="evenodd"
+              d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
+              clip-rule="evenodd"/>
+          </svg>
+        </a>
+      </li>
+      <% } %>
+    </ul>
+     </section>
+  </div>
+  <div
+    class="col-start-3 col-span-2 DueToday mt-4 flex flex-col  text-center ml-10"
+  >
+  <section title="Due Today">
+    <h5  class=" Due Today text-3xl">
+      Due Today <span id="Due Today" class="text-2xl inline ml-2  border border-black-400"><%=DueToday.length%> </span>
+      </h5> 
+     
+    
+    <ul class="dueTodayItems list-none flex flex-col justify-center">
+      <%for(item of DueToday){%>
+      <li class=" Todo-Item flex flex-row mb-1 gap-2 ml-20 mt-1 li">
 
-  </body>
-</html>
+        <input type="checkbox" name="completed" id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
+        <label for="list-item-<%=item.id%>" class="text-2xl text-gray-600 cursor-pointer">
+          <%=item.title%>
+        </label>
+      <a href="/" class="icon hidden" onclick="deleteTodo('<%= item.id %>')">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="w-5 h-5 mt-2"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </a>
+      </li>
+    <%}%>
+    </ul>
+    </section>
+  </div>
+  <div
+    class="col-start-5 col-span-2 DueLater mt-4 flex flex-col  text-center ml-10"
+  >
+  <section title="Due Later">
+    <h5 id="Due Later" class="text-3xl">
+      Due Later <span id="Due Later" class="text-2xl block-inline ml-2 border border-black-400"><%=DueLater.length%></span>
+       </h5>
+     
+  
+    <ul class="dueLaterItems list-none flex flex-col justify-center">
+      <%for(item of DueLater){%>
+      <li class=" Todo-Item flex flex-row mb-1 gap-2 ml-20 mt-1 li">
+        <input type="checkbox" name="completed" id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
+        <label for="list-item-<%=item.id%>" class="text-2xl text-gray-600 cursor-pointer">
+          <%=item.title%>
+        </label>
+       <a href="/" class="icon hidden" onclick="deleteTodo('<%= item.id %>')">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="w-5 h-5 mt-2"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </a>
+      </li>
+      <% } %>
+     
+    </ul>
+    </section>
+  </div>
+  <div
+    class="col-start-3 col-span-2 DueLater mt-4 flex flex-col  text-center ml-10"
+  >
+  <section title="Completed Items">
+    <h5 id="Completed" class="text-3xl">
+     Completed Items  <span id="Completed" class="text-xl block-inline ml-2 border border-black-400"><%=completedItems.length%></span>
+       </h5>
+      
+  
+    <ul class="completedItems list-none flex flex-col justify-center">
+      <%for(item of completedItems){%>
+      <li class=" Todo-Item flex flex-row mb-1 gap-2 ml-20 mt-1 li">
+        <input type="checkbox" name="completed " id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
+        <label for="list-item-<%=item.id%>" class="text-2xl text-gray-600 cursor-pointer">
+          <%=item.title%>
+        </label>
+        <a href="/" class="icon hidden" onclick="deleteTodo('<%= item.id %>')">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="w-5 h-5 mt-2"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </a>
+      </li>
+      <% } %>
+     
+    </ul>
+    </section>
+  </div>
+
+</div>
+
