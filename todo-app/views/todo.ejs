@@ -5,7 +5,7 @@
   >
   <section id="Overdue">
     <h5 class="text-3xl">
-      Overdue  <span class="text-2xl inline ml-2  border border-black-400">
+      Overdue  <span id="count-overdue" class="text-2xl inline ml-2  border border-black-400">
          <%=overDue.length%>
       </span></h5>
       
@@ -39,7 +39,7 @@
   >
   <section id="Due Today">
     <h5  class="text-3xl">
-      Due Today <span class="text-2xl inline ml-2  border border-black-400"><%=DueToday.length%> </span>
+      Due Today <span id="count-due-today" class="text-2xl inline ml-2  border border-black-400"><%=DueToday.length%> </span>
       </h5> 
      
     
@@ -75,7 +75,7 @@
   >
   <section id="Due Later">
     <h5  class="text-3xl">
-      Due Later <span class="text-2xl block-inline ml-2 border border-black-400"><%=DueLater.length%></span>
+      Due Later <span id="count-due-later" class="text-2xl block-inline ml-2 border border-black-400"><%=DueLater.length%></span>
        </h5>
      
   
@@ -111,7 +111,7 @@
   >
   <section id="Completed">
     <h5 class="text-3xl">
-     Completed Items  <span class="text-xl block-inline ml-2 border border-black-400"><%=completedItems.length%></span>
+     Completed Items  <span id="count-completed" class="text-xl block-inline ml-2 border border-black-400"><%=completedItems.length%></span>
        </h5>
       
   
