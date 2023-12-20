@@ -3,9 +3,9 @@
   <div
     class="col-start-1 col-span-2 OverDue mt-4 flex flex-col text-center ml-10"
   >
-  <section title=" Overdue">
+  <section id="Overdue">
     <h5 class="text-3xl">
-      Overdue  <span id="Overdue" class="text-2xl inline ml-2  border border-black-400">
+      Overdue  <span class="text-2xl inline ml-2  border border-black-400">
          <%=overDue.length%>
       </span></h5>
       
@@ -37,9 +37,9 @@
   <div
     class="col-start-3 col-span-2 DueToday mt-4 flex flex-col  text-center ml-10"
   >
-  <section title="Due Today">
+  <section id="Due Today">
     <h5  class="text-3xl">
-      Due Today <span id="Due Today" class="text-2xl inline ml-2  border border-black-400"><%=DueToday.length%> </span>
+      Due Today <span class="text-2xl inline ml-2  border border-black-400"><%=DueToday.length%> </span>
       </h5> 
      
     
@@ -73,9 +73,9 @@
   <div
     class="col-start-5 col-span-2 DueLater mt-4 flex flex-col  text-center ml-10"
   >
-  <section title="Due Later">
+  <section id="Due Later">
     <h5  class="text-3xl">
-      Due Later <span id="Due Later" class="text-2xl block-inline ml-2 border border-black-400"><%=DueLater.length%></span>
+      Due Later <span class="text-2xl block-inline ml-2 border border-black-400"><%=DueLater.length%></span>
        </h5>
      
   
@@ -109,13 +109,13 @@
   <div
     class="col-start-3 col-span-2 DueLater mt-4 flex flex-col  text-center ml-10"
   >
-  <section title="Completed Items">
+  <section id="Completed">
     <h5 class="text-3xl">
-     Completed Items  <span id="Completed" class="text-xl block-inline ml-2 border border-black-400"><%=completedItems.length%></span>
+     Completed Items  <span class="text-xl block-inline ml-2 border border-black-400"><%=completedItems.length%></span>
        </h5>
       
   
-    <ul class="completedItems list-none flex flex-col justify-center">
+    <ul class="list-none flex flex-col justify-center">
       <%for(item of completedItems){%>
       <li class=" flex flex-row mb-1 gap-2 ml-20 mt-1 li">
         <input type="checkbox" name="completed " id="list-item-<%=item.id%>" class="mt-1" <%= item.completed ? "checked" : "" %> onclick="updateTodo(<%=item.id%>)" />
